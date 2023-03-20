@@ -1,0 +1,210 @@
+import random
+import csv
+import os
+import pandas as pd
+
+sevens = pd.read_csv("SevensOutput.csv")
+read = sevens.loc[:,"Average Score c1"]
+read2 =sevens.loc[:,"Average Score c2"]
+read3 = sevens.loc[:,"Range of Score"]
+#gprint(read, read2, read3)
+readlist=read.tolist()
+read2list=read2.tolist()
+read3list=read3.tolist()
+
+
+while True:
+    email = str(input("Enter email address: "))
+    if "@" and "." in email:
+        break
+    else:
+        pass
+while True:
+    strat = int(input("Do you wish to play with a startegy: 1 = yes, 2 = no : "))
+    if strat == 1:
+        print("\033[0;34m"+"Reroll only once instead of 2 times"+"\033[0m")
+        print("With this strategy you have a predicted average move of", readlist[0])
+        
+        break
+    if strat == 2:
+        break
+    else:
+        pass
+
+def roll_dice():
+    return random.randint(1, 6)
+
+def play_sevens():
+    player_score = 0
+    computer_score = 0
+    num_of_dices = 6
+    total_player_score = 0
+    total_comp_score = 0
+
+    while True:
+        
+        for i in range(3):
+            
+            for i in range(1):
+                player_dice_list = []
+                for i in range(num_of_dices):
+                    player_dice_list.append(roll_dice())
+                
+                print(player_dice_list)
+                
+                for dice in player_dice_list:
+                    for other_dice in player_dice_list:
+                        if dice + other_dice == 7:
+                            print(dice,"+", other_dice, "= 7")
+                            
+                            player_dice_list.remove(dice)
+                            
+                            player_dice_list.remove(other_dice)
+
+                            break
+                
+                    
+                print(player_dice_list)
+                player_score = sum(player_dice_list)
+                total_player_score = total_player_score + player_score
+                print("player score: ",player_score)
+
+
+
+        
+            
+            for i in range(2):
+            
+                play_player = (input("reroll (r) or skip (s): "))
+
+                if play_player == ("r"):
+                    
+                  
+                    
+                    print(player_dice_list)
+                    num_of_dices = len(player_dice_list)
+                    player_dice_list = []
+                    for i in range(num_of_dices):
+                        player_dice_list.append(roll_dice())
+                    print(player_dice_list)
+
+                    for dice in player_dice_list:
+                        for other_dice in player_dice_list:
+                            if dice + other_dice == 7:
+                                print(dice,"+", other_dice, "= 7")
+                                
+                                player_dice_list.remove(dice)
+                                
+                                player_dice_list.remove(other_dice)
+
+                                break
+                    
+                        
+                    #print(player_dice_list)
+                    player_score = sum(player_dice_list)
+                    total_player_score = total_player_score + player_score
+                    print("player score: ",player_score)
+                
+                if play_player == ("s"):
+                                    
+                    for i in range(1):  
+
+                        comp_dice_list = []
+                        for i in range(num_of_dices):
+                            comp_dice_list.append(roll_dice())
+                        
+                        print(comp_dice_list)
+                        
+                        for dice in comp_dice_list:
+                            for other_dice in comp_dice_list:
+                                if dice + other_dice == 7:
+                                    print(dice,"+", other_dice, "= 7")
+                                    
+                                    comp_dice_list.remove(dice)
+                                    
+                                    comp_dice_list.remove(other_dice)
+                                   
+                                    break
+                                
+                        #print(comp_dice_list)
+                        computer_score = sum(comp_dice_list)
+                        total_comp_score = total_comp_score + computer_score
+                        print("computer score: ",computer_score)
+                
+              
+
+    
+
+            if play_player == ("r"):
+                                    
+
+                comp_dice_list = []
+                for i in range(num_of_dices):
+                    comp_dice_list.append(roll_dice())
+                
+                print(comp_dice_list)
+                
+                for dice in comp_dice_list:
+                    for other_dice in comp_dice_list:
+                        if dice + other_dice == 7:
+                            print(dice,"+", other_dice, "= 7")
+                            
+                            comp_dice_list.remove(dice)
+                            
+                            comp_dice_list.remove(other_dice)
+                           
+                            break
+                        
+#                  print(comp_dice_list)
+                computer_score = sum(comp_dice_list)
+                total_comp_score = total_comp_score + computer_score
+                print("computer score: ",computer_score)
+                pass
+            else:
+                print("Error choose R for roll or S for skip")
+                break
+            
+        
+        print("Total Player score: ",total_player_score)
+        print("Total Computer score: ",total_comp_score)        
+        
+        
+        
+        if player_score > computer_score:
+            player_score += 1
+            print ("Player score: " , total_player_score)
+        if computer_score > player_score:
+            computer_score += 1
+            print ("Computer score: " , total_comp_score)
+       
+
+        if player_score > computer_score:
+            print("You win!")
+            break
+        
+        if computer_score > player_score:
+            print("Computer wins!")
+            break
+
+
+    header = ["computer score", "player score", "email"]
+    row = [total_comp_score, total_player_score]
+  
+    
+
+    if not os.path.exists("SevensData.csv"):
+        f = open("SevensData.csv", mode="w", newline= "")
+        write = csv.writer(f)
+        write.writerow(header)
+        write.writerow(row)
+    else:
+        f = open("SevensData.csv", mode="a", newline= "")
+        write = csv.writer(f)
+        write.writerow(row)
+    
+    
+    f.close()
+   
+        
+play_sevens()
+
